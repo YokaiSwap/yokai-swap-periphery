@@ -12,13 +12,13 @@ yarn install
 
 ### Compile Contracts
 
-Link [`yokaiswap-core`](https://github.com/YokaiSwap/yokaiswap-core) frist.
+Link [`yokai-swap-core`](https://github.com/YokaiSwap/yokai-swap-core) frist.
 
 ```sh
 cd $PATH_TO_YOKAISWAP_CORE
 yarn link
 cd -
-yarn link yokaiswap-core
+yarn link yokai-swap-core
 
 yarn compile
 ```
@@ -27,7 +27,7 @@ yarn compile
 
 ### Prerequisites
 
-You need to deploy [YokaiSwap Core](https://github.com/YokaiSwap/yokaiswap-core) frist.
+You need to deploy [YokaiSwap Core](https://github.com/YokaiSwap/yokai-swap-core) frist.
 
 ### Setup
 

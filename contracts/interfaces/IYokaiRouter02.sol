@@ -1,8 +1,8 @@
 pragma solidity >=0.6.2;
 
-import './IPancakeRouter01.sol';
+import './IYokaiRouter01.sol';
 
-interface IPancakeRouter02 is IPancakeRouter01 {
+interface IYokaiRouter02 is IYokaiRouter01 {
     function removeLiquidityETHSupportingFeeOnTransferTokens(
         address token,
         uint liquidity,

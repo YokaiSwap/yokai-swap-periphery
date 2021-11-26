@@ -1,17 +1,57 @@
-# Pancake Router
+# YokaiSwap Periphery
 
-### Bsc-Test
+## Local Development
 
-The following assumes the use of `node@>=10`.
+The following assumes the use of `node@>=14`.
 
-## Install Dependencies
+### Install Dependencies
 
-`yarn`
+```
+yarn install
+```
 
-## Compile Contracts
+### Compile Contracts
 
-`yarn compile`
+Link [`yokaiswap-core`](https://github.com/YokaiSwap/yokaiswap-core) frist.
 
-## Run Tests
+```sh
+cd $PATH_TO_YOKAISWAP_CORE
+yarn link
+cd -
+yarn link yokaiswap-core
 
-`yarn test`
+yarn compile
+```
+
+## Deployment
+
+### Prerequisites
+
+You need to deploy [YokaiSwap Core](https://github.com/YokaiSwap/yokaiswap-core) frist.
+
+### Setup
+
+Create a `.env` file, remember to replace placeholders with real value.
+
+```sh
+cat > .env <<EOF
+DEPLOYER_PRIVATE_KEY=< replace with your private key >
+RPC_URL=< polyjuice web3 rpc >
+NETWORK_SUFFIX=< gw-testnet or gw-mainnet >
+
+ROLLUP_TYPE_HASH=< replace with godwoken rollup type hash >
+ETH_ACCOUNT_LOCK_CODE_HASH=< replace with godwoken eth-account-lock code hash >
+
+FACTORY_ADDRESS=< replace with deployed yokai factory contract address >
+WCKB_ADDRESS=< replace with wckb contract address >
+EOF
+```
+
+### Deploy
+
+Then compile and deploy.
+
+```sh
+yarn compile
+yarn deploy
+```

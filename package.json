@@ -1,50 +1,37 @@
 {
-  "name": "pancakeswap-peripheral",
-  "version": "1.1.0-beta.0",
-  "description": "🎚 Peripheral smart contracts for interacting with pancake",
+  "name": "yokaiswap-peripheral",
+  "description": "🎚 Peripheral smart contracts for interacting with yokaiswap",
+  "version": "0.1.0",
+  "private": true,
   "engines": {
-    "node": ">=10"
-  },
-  "homepage": "https://pancakeswap.finance",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pancakeswap/pancake-swap-periphery.git"
-  },
-  "files": [
-    "build",
-    "contracts"
-  ],
-  "dependencies": {
-    "@uniswap/lib": "1.1.1",
-    "@uniswap/v2-core": "^1.0.1",
-    "truffle-hdwallet-provider": "^1.0.17",
-    "truffle-plugin-verify": "^0.4.0"
-  },
-  "devDependencies": {
-    "@types/chai": "^4.2.6",
-    "@types/mocha": "^5.2.7",
-    "chai": "^4.2.0",
-    "ethereum-waffle": "^2.4.1",
-    "ethereumjs-util": "^6.2.0",
-    "mocha": "^6.2.2",
-    "ncp": "^2.0.0",
-    "prettier": "^1.19.1",
-    "rimraf": "^3.0.0",
-    "solc": "0.6.6",
-    "ts-node": "^8.5.4",
-    "typescript": "^3.7.3"
+    "node": ">=14"
   },
   "scripts": {
-    "lint": "yarn prettier ./test/*.ts --check",
-    "lint:fix": "yarn prettier ./test/*.ts --write",
-    "clean": "rimraf ./build/",
-    "copy-v1-artifacts": "ncp ./buildV1 ./build",
-    "precompile": "yarn clean",
-    "compile": "waffle .waffle.json",
-    "postcompile": "yarn copy-v1-artifacts",
-    "pretest": "yarn compile",
-    "test": "mocha",
-    "prepublishOnly": "yarn test"
+    "clean": "rimraf ./cache && rimraf ./artifacts",
+    "compile": "yarn run clean && hardhat compile",
+    "deploy:wckb": "ts-node scripts/deploy-wrapped-ckb.ts",
+    "deploy:router": "ts-node scripts/deploy-yokai-router.ts",
+    "deploy": "yarn deploy:router"
   },
-  "license": "GPL-3.0-or-later"
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@polyjuice-provider/ethers": "^0.0.1-rc8",
+    "@tsconfig/recommended": "^1.0.1",
+    "@types/node": "^16.7.1",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
+    "@typescript-eslint/parser": "^4.29.3",
+    "@uniswap/lib": "1.1.1",
+    "axios": "^0.21.1",
+    "dotenv": "^10.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.1",
+    "ethers": "^5.4.1",
+    "hardhat": "^2.1.1",
+    "prettier": "^2.3.2",
+    "rimraf": "^3.0.0",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.3.5"
+  }
 }

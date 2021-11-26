@@ -1,9 +1,14 @@
 {
+  "extends": "@tsconfig/recommended/tsconfig.json",
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "module": "commonjs",
-    "strict": true,
-    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    // "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true
   }
 }

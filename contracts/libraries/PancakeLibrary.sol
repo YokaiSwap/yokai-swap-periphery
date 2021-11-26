@@ -15,20 +15,19 @@ library PancakeLibrary {
     }
 
     // calculates the CREATE2 address for a pair without making any external calls
-    function pairFor(address factory, address tokenA, address tokenB) internal pure returns (address pair) {
+    function pairFor(address factory, address tokenA, address tokenB) internal returns (address pair) {
         (address token0, address token1) = sortTokens(tokenA, tokenB);
-        pair = address(uint(keccak256(abi.encodePacked(
+        pair = convertETHAddrToGodwokenAddr(address(uint(keccak256(abi.encodePacked(
                 hex'ff',
                 factory,
                 keccak256(abi.encodePacked(token0, token1)),
-                hex'00fb7f630766e6a796048ea87d01acd3068e8ff67d078148a3fa3f4a84f69bd5' // init code hash
-            ))));
+                hex'abf2eb6b63bf7a67779f05d4ebe5d730e20cfa617fca657d7b6e6434de6051bf' // init code hash
+            )))));
     }
 
     // fetches and sorts the reserves for a pair
-    function getReserves(address factory, address tokenA, address tokenB) internal view returns (uint reserveA, uint reserveB) {
+    function getReserves(address factory, address tokenA, address tokenB) internal returns (uint reserveA, uint reserveB) {
         (address token0,) = sortTokens(tokenA, tokenB);
-        pairFor(factory, tokenA, tokenB);
         (uint reserve0, uint reserve1,) = IPancakePair(pairFor(factory, tokenA, tokenB)).getReserves();
         (reserveA, reserveB) = tokenA == token0 ? (reserve0, reserve1) : (reserve1, reserve0);
     }
@@ -60,7 +59,7 @@ library PancakeLibrary {
     }
 
     // performs chained getAmountOut calculations on any number of pairs
-    function getAmountsOut(address factory, uint amountIn, address[] memory path) internal view returns (uint[] memory amounts) {
+    function getAmountsOut(address factory, uint amountIn, address[] memory path) internal returns (uint[] memory amounts) {
         require(path.length >= 2, 'PancakeLibrary: INVALID_PATH');
         amounts = new uint[](path.length);
         amounts[0] = amountIn;
@@ -71,7 +70,7 @@ library PancakeLibrary {
     }
 
     // performs chained getAmountIn calculations on any number of pairs
-    function getAmountsIn(address factory, uint amountOut, address[] memory path) internal view returns (uint[] memory amounts) {
+    function getAmountsIn(address factory, uint amountOut, address[] memory path) internal returns (uint[] memory amounts) {
         require(path.length >= 2, 'PancakeLibrary: INVALID_PATH');
         amounts = new uint[](path.length);
         amounts[amounts.length - 1] = amountOut;
@@ -79,5 +78,21 @@ library PancakeLibrary {
             (uint reserveIn, uint reserveOut) = getReserves(factory, path[i - 1], path[i]);
             amounts[i - 1] = getAmountIn(amounts[i], reserveIn, reserveOut);
         }
+    }
+
+    // [Polyjuice compatibility]
+    function convertETHAddrToGodwokenAddr(address eth_addr)
+        public
+        returns (address)
+    {
+        uint256[1] memory input;
+        input[0] = uint256(uint160(address(eth_addr)));
+        uint256[1] memory output;
+        assembly {
+            if iszero(call(not(0), 0xf3, 0x0, input, 0x20, output, 0x20)) {
+                revert(0x0, 0x0)
+            }
+        }
+        return address(uint160(output[0]));
     }
 }

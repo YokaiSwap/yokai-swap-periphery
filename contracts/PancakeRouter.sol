@@ -426,7 +426,6 @@ contract PancakeRouter is IPancakeRouter02 {
 
     function getAmountsOut(uint amountIn, address[] memory path)
         public
-        view
         virtual
         override
         returns (uint[] memory amounts)
@@ -436,7 +435,6 @@ contract PancakeRouter is IPancakeRouter02 {
 
     function getAmountsIn(uint amountOut, address[] memory path)
         public
-        view
         virtual
         override
         returns (uint[] memory amounts)

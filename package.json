@@ -16,7 +16,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
-    "@polyjuice-provider/ethers": "^0.0.1-rc8",
+    "@polyjuice-provider/ethers": "^0.1.0",
     "@tsconfig/recommended": "^1.0.1",
     "@types/node": "^16.7.1",
     "@typescript-eslint/eslint-plugin": "^4.29.3",

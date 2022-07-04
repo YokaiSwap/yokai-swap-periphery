@@ -426,6 +426,7 @@ contract YokaiRouter is IYokaiRouter02 {
 
     function getAmountsOut(uint amountIn, address[] memory path)
         public
+        view
         virtual
         override
         returns (uint[] memory amounts)
@@ -435,6 +436,7 @@ contract YokaiRouter is IYokaiRouter02 {
 
     function getAmountsIn(uint amountOut, address[] memory path)
         public
+        view
         virtual
         override
         returns (uint[] memory amounts)

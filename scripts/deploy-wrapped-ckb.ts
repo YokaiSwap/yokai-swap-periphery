@@ -1,4 +1,4 @@
-import { ContractFactory } from "ethers";
+import { ContractFactory, Contract } from "ethers";
 
 import { TransactionSubmitter } from "./TransactionSubmitter";
 import {
@@ -6,20 +6,22 @@ import {
   networkSuffix,
   initGWAccountIfNeeded,
   isGodwoken,
+  getGasPrice,
 } from "./common";
 
 import WCKB from "../artifacts/contracts/test/WETH9.sol/WETH9.json";
 
 const deployerAddress = deployer.address;
 const txOverrides = {
-  gasPrice: isGodwoken ? 0 : undefined,
-  gasLimit: isGodwoken ? 12_500_000 : undefined,
+  gasLimit: isGodwoken ? 500_000 : undefined,
 };
 
 async function main() {
   console.log("Deployer Ethereum address:", deployerAddress);
 
   await initGWAccountIfNeeded(deployerAddress);
+
+  const gasPrice = await getGasPrice();
 
   const transactionSubmitter = await TransactionSubmitter.newWithHistory(
     `deploy-wrapped-ckb${networkSuffix ? `-${networkSuffix}` : ""}.json`,
@@ -35,13 +37,17 @@ async function main() {
         deployer,
       );
       const tx = implementationFactory.getDeployTransaction();
-      tx.gasPrice = txOverrides.gasPrice;
+      tx.gasPrice = gasPrice;
       tx.gasLimit = txOverrides.gasLimit;
       return deployer.sendTransaction(tx);
     },
   );
   const wckbAddress = receipt.contractAddress;
   console.log(`    WCKB address:`, wckbAddress);
+
+  const wckb = new Contract(wckbAddress, WCKB.abi, deployer);
+
+  console.log("    WCKB.decimals:", await wckb.callStatic.decimals());
 }
 
 main()

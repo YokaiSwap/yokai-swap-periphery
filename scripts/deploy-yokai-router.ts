@@ -1,4 +1,4 @@
-import { ContractFactory } from "ethers";
+import { Contract, ContractFactory } from "ethers";
 
 import { TransactionSubmitter } from "./TransactionSubmitter";
 import {
@@ -6,14 +6,14 @@ import {
   networkSuffix,
   initGWAccountIfNeeded,
   isGodwoken,
+  getGasPrice,
 } from "./common";
 
 import YokaiRouter from "../artifacts/contracts/YokaiRouter.sol/YokaiRouter.json";
 
 const deployerAddress = deployer.address;
 const txOverrides = {
-  gasPrice: isGodwoken ? 0 : undefined,
-  gasLimit: isGodwoken ? 12_500_000 : undefined,
+  gasLimit: isGodwoken ? 500_000 : undefined,
 };
 
 const { FACTORY_ADDRESS } = process.env;
@@ -35,6 +35,8 @@ async function main() {
 
   await initGWAccountIfNeeded(deployerAddress);
 
+  const gasPrice = await getGasPrice();
+
   const transactionSubmitter = await TransactionSubmitter.newWithHistory(
     `deploy-yokai-router${networkSuffix ? `-${networkSuffix}` : ""}.json`,
     Boolean(process.env.IGNORE_HISTORY),
@@ -52,13 +54,18 @@ async function main() {
         factoryAddress,
         wckbAddress,
       );
-      tx.gasPrice = txOverrides.gasPrice;
+      tx.gasPrice = gasPrice;
       tx.gasLimit = txOverrides.gasLimit;
       return deployer.sendTransaction(tx);
     },
   );
   const yokaiRouterAddress = receipt.contractAddress;
   console.log(`    YokaiRouter address:`, yokaiRouterAddress);
+
+  const router = new Contract(yokaiRouterAddress, YokaiRouter.abi, deployer);
+
+  console.log(`    YokaiRouter.factory`, await router.callStatic.factory());
+  console.log(`    YokaiRouter.WETH`, await router.callStatic.WETH());
 }
 
 main()
